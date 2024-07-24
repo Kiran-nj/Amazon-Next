@@ -3,7 +3,7 @@ import Products from "@/Components/Products";
 import { ProductProps } from "@/type";
 
 interface props  {
-  productData :ProductProps
+  productData :ProductProps[]
 }
 export default function Home({productData} :props) {
   console.log(productData);
