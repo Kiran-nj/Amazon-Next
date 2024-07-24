@@ -1,12 +1,16 @@
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import { ProductProps } from '@/type';
 import Image from 'next/image';
-import React from 'react';
 import { HiHeart, HiShoppingCart } from 'react-icons/hi';
-import Formatted from './Formatted';
 import { useDispatch } from 'react-redux';
 import { addToCart, addToFavorites } from '@/Store/nextSlice';
+import Formatted from '@/Components/Formatted';
 
-const Products = ({ productData }: { productData: ProductProps[] }) => {
+const Search = () => {
+  const router = useRouter();
+  const { query } = router.query;
+  const [searchResults, setSearchResults] = useState<ProductProps[]>([]);
   const dispatch = useDispatch();
 
   const handleAddToCart = (product: ProductProps) => {
@@ -17,10 +21,35 @@ const Products = ({ productData }: { productData: ProductProps[] }) => {
     dispatch(addToFavorites({ ...product, quantity: 1 }));
   };
 
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      try {
+        const res = await fetch(`https://fakestoreapiserver.reactbd.com/tech`);
+        if (!res.ok) {
+          throw new Error(`Error fetching data: ${res.statusText}`);
+        }
+        const data = await res.json();
+        console.log('Fetched Data:', data); // Debug log
+        if (query) {
+          const filteredResults = data.filter((product: ProductProps) =>
+            product.title.toLowerCase().includes((query as string).toLowerCase())
+          );
+          setSearchResults(filteredResults);
+        } else {
+          setSearchResults(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch search results:', error);
+      }
+    };
+
+    fetchSearchResults();
+  }, [query]);
+
   return (
     <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-8'>
-      {productData.map(({ brand, category, description, image, isNew, oldPrice, price, title, _id }: ProductProps) => (
-        <div key={_id} className='w-full  text-black flex flex-col bg-white rounded-lg overflow-hidden group'>
+      {searchResults.map(({ brand, category, description, image, isNew, oldPrice, price, title, _id }: ProductProps) => (
+        <div key={_id} className='w-full text-black flex flex-col bg-white rounded-lg overflow-hidden group'>
           {/* Image */}
           <div className='w-full h-[300px] relative'>
             <Image
@@ -61,4 +90,4 @@ const Products = ({ productData }: { productData: ProductProps[] }) => {
   );
 };
 
-export default Products;
+export default Search;

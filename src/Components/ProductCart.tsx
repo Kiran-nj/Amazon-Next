@@ -41,24 +41,24 @@ const ProductCart = ({item}:cartProductProps) => {
   
       
   return (
-    <div className='flex items-center bg-slate-300 rounded-lg'>
+    <div className='flex items-center bg-slate-300 rounded-lg overflow-hidden'>
         <Image alt='img' className='scale-95 hover:scale-105 transition-all cursor-pointer object-cover' 
         width={150} height={150} src={item.image} />
         <div className='flex flex-col justify-between pl-4 py-3 w-full'>
             <h2 className='text-lg'>{item.title}</h2>
-            <p className='text-sm'>{item.description}</p>
+            <p className='text-sm hidden lg:flex'>{item.description}</p>
             <p className='text-lg font-bold'>${item.price}</p>
             <p className='text-sm'>Quantity: {item.quantity}</p>
-            <div className='w-10 flex gap-2 m-1'>
+            <div className='w-10 flex flex-col  md:flex-row   gap-2 '>
             <button onClick={handleDecreaseQuantity}
              className='bg-slate-700 hover:bg-black text-white font-bold py-
-            2 px-4 rounded'>-</button>
+            2 px-4 my-1 rounded'>-</button>
             <button  onClick={handleIncreaseQuantity} 
              className='bg-slate-700 hover:bg-black text-white font-bold py-
-            2 px-4 rounded'>+</button>
+            2 px-4 my-1 rounded'>+</button>
             <button  onClick={handleRemoveProduct}
             className='bg-slate-700 hover:bg-black text-white font-bold py-
-            2 px-4 rounded'>Remove</button>
+            2 px-4 rounded my-1'>Remove</button>
             </div>
 
         </div>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo from '../../images/logo.png'
 import Cart from '../../images/cartIcon.png'
 import { FaLocationDot } from "react-icons/fa6";
@@ -10,13 +10,26 @@ import { useSelector, useDispatch } from 'react-redux';
 import { StateProps } from '@/type';
 import { useSession , signIn , signOut } from 'next-auth/react';
 import { addUser } from '@/Store/nextSlice';
+import { useRouter } from 'next/router';
 
 const Header = () => {
   const { data: session } = useSession()
   const {productData,favoriteData ,userInfo} =useSelector((state:StateProps)=>state.next)
   console.log( "data:",productData);
-
+  const [searchQuery, setSearchQuery] = useState('');
   const dispatch=useDispatch()
+  const router = useRouter();
+
+  const handleSearch = () => {
+    router.push(`/Search?query=${searchQuery.trim()}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   useEffect(()=>{
     if(session){
       dispatch(addUser({
@@ -41,17 +54,23 @@ const Header = () => {
         <FaLocationDot />
         <h1>USA</h1>
        </div>
-       {/* search */}
-       <div className='flex-1 hidden md:flex items-center'>
-            <input className='text-black w-full h-full outline-none p-2 rounded-l-md
-            border focus-visible:border-orange-300 focus-visible:border-[1px] '
-            type='text' 
-            placeholder='Search products sukudu'/>
-            <span className=' bg-orange-300 rounded-r-md text-slate-950 hover:scale-105 p-2 
-            transition-all hover:bg-orange-500 hover:text-white'>
-                <HiSearch className='text-2xl '/>
-            </span>
-       </div>
+        {/* search */}
+        <div className='flex-1 hidden md:flex items-center'>
+          <input
+            className='text-black w-full h-full outline-none p-2 rounded-l-md border focus-visible:border-orange-300 focus-visible:border-[1px]'
+            type='text'
+            placeholder='Search products'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            className='bg-orange-300 rounded-r-md text-slate-950 hover:scale-105 p-2 transition-all hover:bg-orange-500 hover:text-white'
+            onClick={handleSearch}
+          >
+            <HiSearch className='text-2xl' />
+          </button>
+        </div>
        {/* signin */}
        { userInfo ? (
        <div className='text-slate-300 text-xs flex flex-col items-center border border-transparent
