@@ -46,7 +46,7 @@ const Header = () => {
        <div className='h-full w-full inline-flex  justify-between items-center gap-1 mdl:gap-3 px-4' >
         {/* logo */}
         <Link href={"/"} className='hover:scale-110  cursor-pointer transition-all mt-2'>
-        <Image src={Logo} alt="logo" className=" w-28   " />
+        <Image src={Logo} alt="logo" className=" w-28   "  width={112} />
        </Link>
        {/* delevery */}
        <div className='hidden md:inline-flex items-center hover:border-gray-400 duration-300 p-2
